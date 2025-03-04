@@ -4,27 +4,19 @@ import com.angus.pethomeadoptionbackend.constant.Gender;
 
 public class PetSearchRequest {
 
-    private Integer pet_id;
-    private String serial_no;
+
     private Integer breed;
-    private Gender gender;
+    private Integer gender;
     private Integer age;
     private Integer limit;
+    private Integer category;
 
-    public Integer getPet_id() {
-        return pet_id;
+    public Integer getCategory() {
+        return category;
     }
 
-    public void setPet_id(Integer pet_id) {
-        this.pet_id = pet_id;
-    }
-
-    public String getSerial_no() {
-        return serial_no;
-    }
-
-    public void setSerial_no(String serial_no) {
-        this.serial_no = serial_no;
+    public void setCategory(Integer category) {
+        this.category = category;
     }
 
     public Integer getBreed() {
@@ -35,11 +27,11 @@ public class PetSearchRequest {
         this.breed = breed;
     }
 
-    public Gender getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
@@ -47,7 +39,7 @@ public class PetSearchRequest {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
@@ -55,7 +47,7 @@ public class PetSearchRequest {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    public void setLimit(Integer limit) {
         this.limit = limit;
     }
 }

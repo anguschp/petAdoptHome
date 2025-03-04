@@ -1,29 +1,27 @@
-package com.angus.pethomeadoptionbackend.model;
-
-import com.angus.pethomeadoptionbackend.constant.Gender;
+package com.angus.pethomeadoptionbackend.dto;
 
 import java.util.Date;
 import java.util.List;
 
-public class Pet {
+public class PetSearchResponse {
 
-    private int pet_id;
+    private Integer pet_id;
     private String serial_number;
     private String name;
-    private int pet_category;
-    private int breed;
-    private Date birthday;
-    private int gender;
+    private String pet_category;
+    private String breed;
+    private Integer age;
+    private String gender;
     private String pet_description;
     private Date received_date;
     private Date last_modified_date;
     private List<String> imageURL;
 
-    public int getPet_id() {
+    public Integer getPet_id() {
         return pet_id;
     }
 
-    public void setPet_id(int pet_id) {
+    public void setPet_id(Integer pet_id) {
         this.pet_id = pet_id;
     }
 
@@ -43,35 +41,35 @@ public class Pet {
         this.name = name;
     }
 
-    public int getPet_category() {
+    public String getPet_category() {
         return pet_category;
     }
 
-    public void setPet_category(int pet_category) {
+    public void setPet_category(String pet_category) {
         this.pet_category = pet_category;
     }
 
-    public int getBreed() {
+    public String getBreed() {
         return breed;
     }
 
-    public void setBreed(int breed) {
+    public void setBreed(String breed) {
         this.breed = breed;
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public Integer getAge() {
+        return age;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
-    public int getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
