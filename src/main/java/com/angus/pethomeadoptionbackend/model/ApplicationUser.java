@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class ApplicationUser implements UserDetails
 {
 
-    @Idf
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="user_id")
     private Integer userId;
