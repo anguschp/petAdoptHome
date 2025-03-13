@@ -87,45 +87,46 @@ public class UserController {
 
     }
 
-    @PostMapping("/user/login")
-    public ResponseEntity<?> userlogin(@RequestBody @Valid UserLoginRequest login , HttpSession session)
-    {
-        try{
-            boolean result = userService.authenticateUser(login);
-            if(result)
-            {
-                session.setAttribute("user", login.getUsername());
-                return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(true , "Login successfully"));
-            }else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(false, "Invalid username or password"));
-            }
-        }
-        catch(Exception ex)
-        {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.fillInStackTrace());
-        }
-
-
-    }
-
-
-    @PostMapping("/user/logout")
-    public ResponseEntity<?> userlogout(HttpServletResponse response , HttpSession session){
-
-
-        session.invalidate();
-        ResponseCookie cookie = ResponseCookie.from("JSESSIONID", null)
-                .path("/")
-                .maxAge(0)
-                .secure(true) // Enable for HTTPS
-                .httpOnly(true)
-                .sameSite("Lax")
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
-        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(false, "Logout successfully"));
-    }
+//    @PostMapping("/user/login")
+//    public ResponseEntity<?> userlogin(@RequestBody @Valid UserLoginRequest login , HttpSession session)
+//    {
+//        System.out.println("Login checking");
+//        try{
+//            boolean result = userService.authenticateUser(login);
+//            if(result)
+//            {
+//                session.setAttribute("user", login.getUsername());
+//                return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(true , "Login successfully"));
+//            }else {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(false, "Invalid username or password"));
+//            }
+//        }
+//        catch(Exception ex)
+//        {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.fillInStackTrace());
+//        }
+//
+//
+//    }
+//
+//
+//    @PostMapping("/user/logout")
+//    public ResponseEntity<?> userlogout(HttpServletResponse response , HttpSession session){
+//
+//
+//        session.invalidate();
+//        ResponseCookie cookie = ResponseCookie.from("JSESSIONID", null)
+//                .path("/")
+//                .maxAge(0)
+//                .secure(true) // Enable for HTTPS
+//                .httpOnly(true)
+//                .sameSite("Lax")
+//                .build();
+//
+//        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(false, "Logout successfully"));
+//    }
 
 
 }
