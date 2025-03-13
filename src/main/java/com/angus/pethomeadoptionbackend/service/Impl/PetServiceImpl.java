@@ -8,6 +8,7 @@ import com.angus.pethomeadoptionbackend.model.GalleryImage;
 import com.angus.pethomeadoptionbackend.model.Pet;
 import com.angus.pethomeadoptionbackend.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,9 +19,13 @@ public class PetServiceImpl implements PetService {
 
     @Autowired
     private PetDao petDao;
-
     @Autowired
     private GalleryImageDao galleryImageDao;
+    @Value("${SERVER_ADDRESS}")
+    private String serverAddress;
+    @Value("${SERVER_PORT}")
+    private String serverPort;
+
 
     @Override
     public List<PetSearchResponse> getPetList(PetSearchRequest PetSearchRequest) {
@@ -36,7 +41,7 @@ public class PetServiceImpl implements PetService {
                 List<String> urlString  = new ArrayList<>();
                 for(GalleryImage image : relativeImages)
                 {
-                    urlString.add(image.getImageURL());
+                    urlString.add("http://"+serverAddress + ":" + serverPort + "/images" + image.getImageURL());
                 }
 
                 item.setImageURL(urlString);
