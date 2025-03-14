@@ -90,7 +90,6 @@ public class UserController {
 //    @PostMapping("/user/login")
 //    public ResponseEntity<?> userlogin(@RequestBody @Valid UserLoginRequest login , HttpSession session)
 //    {
-//        System.out.println("Login checking");
 //        try{
 //            boolean result = userService.authenticateUser(login);
 //            if(result)

@@ -1,5 +1,6 @@
 package com.angus.pethomeadoptionbackend.service.Impl;
 
+import com.angus.pethomeadoptionbackend.model.MyNewUserDetails;
 import com.angus.pethomeadoptionbackend.model.User;
 import com.angus.pethomeadoptionbackend.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class MyUserDetailsService implements UserDetailsService {
         );
 
 
-        return new org.springframework.security.core.userdetails.User(
+        return new MyNewUserDetails(
+                (long) user.getUserid(),
                 user.getUsername(),
                 user.getPassword(),
                 authorities);

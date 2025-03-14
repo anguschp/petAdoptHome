@@ -1,6 +1,7 @@
 package com.angus.pethomeadoptionbackend.configuration;
 
 
+import com.angus.pethomeadoptionbackend.model.MyNewUserDetails;
 import com.angus.pethomeadoptionbackend.service.Impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,6 @@ import com.angus.pethomeadoptionbackend.service.Impl.MyUserDetailsService;
 import java.util.Map;
 
 
-
-
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -52,15 +50,16 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/user/register").permitAll()
+                        .requestMatchers("/user/testvalid").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/logout").permitAll()
                         .requestMatchers("/pet/petlist").permitAll()
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/error").permitAll() // Add this line
                         .requestMatchers("/admin/approve").hasRole("ADMIN")
                         .anyRequest().hasAuthority("USER")
                 )
                 .formLogin(login->login.loginProcessingUrl("/user/login")
-                        .loginPage("http://localhost:3001/loginpage")
                         .successHandler(loginSuccessHandler())
                         .failureHandler(loginFailureHandler())
                 ).sessionManagement(session -> session
@@ -77,7 +76,7 @@ public class SecurityConfiguration {
                         }) // Return JSON on logout
                         .deleteCookies("JSESSIONID")
                 )
-
+                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
@@ -91,15 +90,18 @@ public class SecurityConfiguration {
 
     @Bean
     public AuthenticationSuccessHandler loginSuccessHandler(){
-        return (request, response, authentication) ->{
+        return (request, response, authentication ) ->{
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            MyNewUserDetails userDetails = (MyNewUserDetails) authentication.getPrincipal();
 
             logger.info("User login[Success] | " + userDetails.getUsername());
+
+
 
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             new ObjectMapper().writeValue(response.getWriter(), Map.of(
+                    "user_Id" , userDetails.getUserId(),
                     "isAuthenticated", true,
                     "username", userDetails.getUsername(),
                     "message", "Login Successfully",

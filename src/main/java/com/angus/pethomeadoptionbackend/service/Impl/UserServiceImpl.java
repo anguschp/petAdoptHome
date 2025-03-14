@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(registerRequest.getPassword());
         newUser.setCreated_date(new Date());
         newUser.setLast_modified_date(new Date());
+        newUser.setRole("ROLE_USER");
 
         HashMap<String ,String> exceptionMap = new HashMap<>();
 
