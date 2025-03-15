@@ -30,6 +30,17 @@ public class User {
     @Column(name = "last_modified_date")
     private Date last_modified_date;
 
+    @Column(name = "role")
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public int getUserid() {
         return userid;
     }

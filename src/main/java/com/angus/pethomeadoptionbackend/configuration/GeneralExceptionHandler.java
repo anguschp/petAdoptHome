@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.angus.pethomeadoptionbackend.customException.ResourceAlreadyExistException;
@@ -32,11 +33,11 @@ public class GeneralExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getValidationErrors());
     }
 
-//
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-//        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+    }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException e) {
