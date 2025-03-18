@@ -32,6 +32,8 @@ public class PetController {
                                                               @RequestParam(required = false) Integer gender,
                                                               @RequestParam(required = false) Integer age,
                                                               @RequestParam(required = false) Integer limit,
+                                                              @RequestParam(required = false) String name,
+                                                              @RequestParam(required = false) String serialNo,
                                                               @RequestParam(defaultValue = "1" , required = false) Integer category
                                                         )
    {
@@ -43,6 +45,9 @@ public class PetController {
       if(age != null){petSearchRequest.setAge(age);}
       if(limit != null){petSearchRequest.setLimit(limit);}
       if(category != null){petSearchRequest.setCategory(category);}
+      if(name != null){petSearchRequest.setName(name);}
+      if(serialNo != null){petSearchRequest.setSerialNo(serialNo);}
+
 
       logger.info("petSearchRequest" + petSearchRequest);
 

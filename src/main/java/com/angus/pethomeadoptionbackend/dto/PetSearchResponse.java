@@ -1,5 +1,7 @@
 package com.angus.pethomeadoptionbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +18,17 @@ public class PetSearchResponse {
     private Date received_date;
     private Date last_modified_date;
     private List<String> imageURL;
+
+    @JsonIgnore
+    private Integer isAvailable;
+
+    public Integer getIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(Integer isAvailable) {
+        this.isAvailable = isAvailable;
+    }
 
     public Integer getPet_id() {
         return pet_id;

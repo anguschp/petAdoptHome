@@ -24,7 +24,7 @@ public class PetDaoImpl implements PetDao {
         HashMap<String, Object> params = new HashMap<>();
 
         String sqlStatement = "select pl.pet_id as id, pl.serial_no as serialNo,pl.pet_name as name, cat.category_name as category, b.breed_name as breed," +
-                                "TIMESTAMPDIFF(YEAR, birthday, CURRENT_DATE()) AS age, g.gender_name as gender, pl.pet_desc as description, pl.received_date, pl.last_modified_date " +
+                                "TIMESTAMPDIFF(YEAR, birthday, CURRENT_DATE()) AS age, g.gender_name as gender, pl.pet_desc as description, pl.received_date, pl.last_modified_date, pl.isAvailable " +
                                 "from petlist pl " +
                                 "left join petcategory cat on pl.category = cat.id " +
                                 "left join breed b on pl.breed = b.breed_id " +
@@ -38,7 +38,7 @@ public class PetDaoImpl implements PetDao {
 
         if(petSearchRequest.getAge() != null)
         {
-            sqlStatement = sqlStatement + " AND pl.age <= :reqAge";
+            sqlStatement = sqlStatement + " AND TIMESTAMPDIFF(YEAR, birthday, CURRENT_DATE()) <= :reqAge";
             params.put("reqAge", petSearchRequest.getAge());
         }
 
@@ -53,6 +53,23 @@ public class PetDaoImpl implements PetDao {
             sqlStatement = sqlStatement + " AND b.breed_id = :reqBreed";
             params.put("reqBreed", petSearchRequest.getBreed());
         }
+
+        if(petSearchRequest.getName() != null)
+        {
+            sqlStatement = sqlStatement + " AND pl.pet_name like :reqName";
+            params.put("reqName", petSearchRequest.getName());
+
+        }
+
+        if(petSearchRequest.getSerialNo() != null)
+        {
+            sqlStatement = sqlStatement + " AND pl.serial_no = :reqSerialNo";
+            params.put("reqSerialNo" ,petSearchRequest.getSerialNo());
+        }
+
+//      To Retrieve the records only is Available right now
+        sqlStatement = sqlStatement + " AND pl.isAvailable = :isAvailable";
+        params.put("isAvailable" , 1);
 
         if(petSearchRequest.getLimit() != null)
         {

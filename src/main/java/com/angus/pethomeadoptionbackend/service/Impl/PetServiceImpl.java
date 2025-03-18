@@ -5,8 +5,9 @@ import com.angus.pethomeadoptionbackend.dao.PetDao;
 import com.angus.pethomeadoptionbackend.dto.PetSearchRequest;
 import com.angus.pethomeadoptionbackend.dto.PetSearchResponse;
 import com.angus.pethomeadoptionbackend.model.GalleryImage;
-import com.angus.pethomeadoptionbackend.model.Pet;
 import com.angus.pethomeadoptionbackend.service.PetService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Component
 public class PetServiceImpl implements PetService {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private PetDao petDao;
@@ -30,34 +33,43 @@ public class PetServiceImpl implements PetService {
     @Override
     public List<PetSearchResponse> getPetList(PetSearchRequest PetSearchRequest) {
 
-        List<PetSearchResponse> resultList = petDao.getPetProfileList(PetSearchRequest);
+        List<PetSearchResponse> resultList = new ArrayList<>();
 
-        for(PetSearchResponse item : resultList){
+        try{
 
-            List<GalleryImage> relativeImages = galleryImageDao.getImagesByPetId(item.getPet_id());
+            resultList = petDao.getPetProfileList(PetSearchRequest);
 
-            if(relativeImages != null && relativeImages.size() > 0)
-            {
-                List<String> urlString  = new ArrayList<>();
-                for(GalleryImage image : relativeImages)
+            //get Image URL for each pet item
+            for(PetSearchResponse item : resultList){
+
+                List<GalleryImage> relativeImages = galleryImageDao.getImagesByPetId(item.getPet_id());
+
+                if(!relativeImages.isEmpty())
                 {
-                    urlString.add("http://"+serverAddress + ":" + serverPort + "/images" + image.getImageURL());
+                    List<String> urlString  = new ArrayList<>();
+                    for(GalleryImage image : relativeImages)
+                    {
+                        urlString.add("http://"+serverAddress + ":" + serverPort + "/images" + image.getImageURL());
+                    }
+                    item.setImageURL(urlString);
                 }
-
-                item.setImageURL(urlString);
             }
 
+
+
+        }catch(Exception e){
+            log.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
 
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             return resultList;
         }
         else return null;
 
     }
-
 
 
 

@@ -1,6 +1,5 @@
 package com.angus.pethomeadoptionbackend.dto;
 
-import com.angus.pethomeadoptionbackend.constant.Gender;
 
 public class PetSearchRequest {
 
@@ -10,6 +9,24 @@ public class PetSearchRequest {
     private Integer age;
     private Integer limit;
     private Integer category;
+    private String name;
+    private String serialNo;
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Integer getCategory() {
         return category;
