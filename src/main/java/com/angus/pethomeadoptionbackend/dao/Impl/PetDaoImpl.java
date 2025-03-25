@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class PetDaoImpl implements PetDao {
@@ -83,4 +84,25 @@ public class PetDaoImpl implements PetDao {
     }
 
 
+    @Override
+    public PetSearchResponse getPetById(Integer id) {
+
+        HashMap<String, Object> params = new HashMap<>();
+        String sqlStatement = "select pl.pet_id as id, pl.serial_no as serialNo,pl.pet_name as name, cat.category_name as category, b.breed_name as breed," +
+                "TIMESTAMPDIFF(YEAR, birthday, CURRENT_DATE()) AS age, g.gender_name as gender, pl.pet_desc as description, pl.received_date, pl.last_modified_date, pl.isAvailable " +
+                "from petlist pl " +
+                "left join petcategory cat on pl.category = cat.id " +
+                "left join breed b on pl.breed = b.breed_id " +
+                "left join pet_gender g on pl.gender = g.gender_id where pl.pet_id = :petId AND pl.isAvailable = :isAvailable";
+
+        params.put("petId", id);
+        params.put("isAvailable", 1);
+
+        List<PetSearchResponse> result = jdbcTemplate.query(sqlStatement , params , new PetRecordRowMapper());
+
+        if(result != null)
+        {
+            return result.get(0);
+        }else  return null;
+    }
 }

@@ -10,6 +10,6 @@ public interface PetDao {
 
     public List<PetSearchResponse> getPetProfileList(PetSearchRequest PetSearchRequest);
 
-
+    public PetSearchResponse getPetById(Integer id);
 
 }

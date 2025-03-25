@@ -18,9 +18,10 @@ public class PetSearchResponse {
     private Date received_date;
     private Date last_modified_date;
     private List<String> imageURL;
-
     @JsonIgnore
     private Integer isAvailable;
+
+
 
     public Integer getIsAvailable() {
         return isAvailable;

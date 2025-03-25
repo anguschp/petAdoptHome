@@ -5,6 +5,7 @@ import com.angus.pethomeadoptionbackend.dao.PetDao;
 import com.angus.pethomeadoptionbackend.dto.PetSearchRequest;
 import com.angus.pethomeadoptionbackend.dto.PetSearchResponse;
 import com.angus.pethomeadoptionbackend.model.GalleryImage;
+import com.angus.pethomeadoptionbackend.model.Pet;
 import com.angus.pethomeadoptionbackend.service.PetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,27 +37,15 @@ public class PetServiceImpl implements PetService {
         List<PetSearchResponse> resultList = new ArrayList<>();
 
         try{
-
             resultList = petDao.getPetProfileList(PetSearchRequest);
 
             //get Image URL for each pet item
-            for(PetSearchResponse item : resultList){
+            for(PetSearchResponse item : resultList) {
 
-                List<GalleryImage> relativeImages = galleryImageDao.getImagesByPetId(item.getPet_id());
+                List<String> urlString = getImageListByPet(item);
+                item.setImageURL(urlString);
 
-                if(!relativeImages.isEmpty())
-                {
-                    List<String> urlString  = new ArrayList<>();
-                    for(GalleryImage image : relativeImages)
-                    {
-                        urlString.add("http://"+serverAddress + ":" + serverPort + "/images" + image.getImageURL());
-                    }
-                    item.setImageURL(urlString);
-                }
             }
-
-
-
         }catch(Exception e){
             log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -71,6 +60,32 @@ public class PetServiceImpl implements PetService {
 
     }
 
+    @Override
+    public PetSearchResponse getPetById(Integer petId) {
+
+        PetSearchResponse returnPet = petDao.getPetById(petId);
+        returnPet.setImageURL(getImageListByPet(returnPet));
+
+        return returnPet;
+    }
+
+
+    private List<String> getImageListByPet(PetSearchResponse pet)
+    {
+        List<GalleryImage> relativeImages = galleryImageDao.getImagesByPetId(pet.getPet_id());
+
+        List<String> urlString  = new ArrayList<>();
+
+        if(!relativeImages.isEmpty())
+        {
+            for(GalleryImage image : relativeImages)
+            {
+                urlString.add("http://"+serverAddress + ":" + serverPort + "/images" + image.getImageURL());
+            }
+        }
+
+        return urlString;
+    }
 
 
 }
