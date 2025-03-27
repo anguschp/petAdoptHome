@@ -5,6 +5,8 @@ import com.angus.pethomeadoptionbackend.dto.FavourList;
 import com.angus.pethomeadoptionbackend.dto.FavourListWithPet;
 import com.angus.pethomeadoptionbackend.service.FavourListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,7 +23,12 @@ public class FavourListServiceImpl implements FavourListService {
 
         List<FavourListWithPet> petList = favourListDao.getUserFavourPetList(userId);
 
-        return petList;
+        if(petList != null){
+            return null;
+        }else
+            return petList;
+
+
     }
 
     @Override

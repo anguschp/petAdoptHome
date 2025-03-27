@@ -44,33 +44,39 @@ public class FavourListDaoImpl implements FavourListDao {
     @Override
     public List<FavourListWithPet> getUserFavourPetList(Integer userId) {
 
-        HashMap<String, Object> favourListHashMap = new HashMap<>();
-        favourListHashMap.put("userId", userId);
-
-        String sqlStatement = "select\n" +
-                "usertable.user_id,\n" +
-                "favourlist.favour_list_id,\n" +
-                "favourlist_pet.pet_id,\n" +
-                "favourlist_pet.created_date as Favour_createDate,\n" +
-                "petlist.pet_name,\n" +
-                "TIMESTAMPDIFF(YEAR, petlist.birthday, CURRENT_DATE()) AS age,\n" +
-                "pet_gender.gender_name as gender,\n" +
-                "breed.breed_name as breed,\n" +
-                "petlist.isAvailable\n" +
-                "from usertable\n" +
-                "left join favourlist on usertable.user_id = favourlist.user_id\n" +
-                "left join favourlist_pet on favourlist.favour_list_id = favourlist_pet.favour_list_id\n" +
-                "left join petlist on favourlist_pet.pet_id = petlist.pet_id\n" +
-                "left join pet_gender on petlist.gender = pet_gender.gender_id\n" +
-                "left join breed on petlist.breed = breed.breed_id\n" +
-                "where usertable.user_id = :userId";
-
-        List<FavourListWithPet> result = namedParameterJdbcTemplate.query(sqlStatement, favourListHashMap, new UserFavourPetRowMapper());
-
-        if(result != null && result.size() > 0){
-            return result;
-        }else
+        Integer favourCount = checkHaveFavourPet(userId);
+        if(favourCount == 0)
+        {
             return null;
+        }else {
+
+            HashMap<String, Object> favourListHashMap = new HashMap<>();
+            favourListHashMap.put("userId", userId);
+
+            String sqlStatement = "select\n" +
+                    "usertable.user_id,\n" +
+                    "favourlist.favour_list_id,\n" +
+                    "favourlist_pet.pet_id,\n" +
+                    "favourlist_pet.created_date as Favour_createDate,\n" +
+                    "petlist.pet_name,\n" +
+                    "TIMESTAMPDIFF(YEAR, petlist.birthday, CURRENT_DATE()) AS age,\n" +
+                    "pet_gender.gender_name as gender,\n" +
+                    "breed.breed_name as breed,\n" +
+                    "petlist.isAvailable\n" +
+                    "from usertable\n" +
+                    "left join favourlist on usertable.user_id = favourlist.user_id\n" +
+                    "left join favourlist_pet on favourlist.favour_list_id = favourlist_pet.favour_list_id\n" +
+                    "left join petlist on favourlist_pet.pet_id = petlist.pet_id\n" +
+                    "left join pet_gender on petlist.gender = pet_gender.gender_id\n" +
+                    "left join breed on petlist.breed = breed.breed_id\n" +
+                    "where usertable.user_id = :userId";
+
+            List<FavourListWithPet> result = namedParameterJdbcTemplate.query(sqlStatement, favourListHashMap, new UserFavourPetRowMapper());
+
+            if (result != null && result.size() > 0) {
+                return result;
+            } else return null;
+        }
     }
 
     @Override
@@ -158,6 +164,54 @@ public class FavourListDaoImpl implements FavourListDao {
         }
 
         return null;
+    }
+
+
+    @Override
+    public Integer checkHaveFavourPet(Integer userId) {
+
+        String sql = "select COUNT(*) from favourlist_pet where favour_list_id= :favourListId";
+
+        Integer favourListId = getUserFavourListById(userId).getFavour_list_Id();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("favourListId" , favourListId);
+
+        Integer result = namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
+
+        if(result != null){
+            return result;
+        }else{
+            return null;
+        }
+
+    }
+
+
+    public void clearAllPetFromFavourList(Integer userId) {
+
+        FavourList favourList = getUserFavourListById(userId);
+        Integer favourListId = favourList.getFavour_list_Id();
+
+        if(favourList != null){
+
+            try{
+
+                String sqlStatement = "delete from favourlist_pet where " +
+                        "favour_list_id= :favourListId";
+
+                Map<String, Object> params = new HashMap<>();
+                params.put("favourListId" , favourListId);
+
+                namedParameterJdbcTemplate.update(sqlStatement, params);
+
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+                throw new RuntimeException("Error occur when delete favourlist record " + e.getMessage());
+            }
+
+        }
+
     }
 
 }

@@ -67,9 +67,9 @@ public class SecurityConfiguration {
 
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
+
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/user/register").permitAll()
-                        .requestMatchers("/user/testvalid").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/logout").permitAll()
                         .requestMatchers("/pet/petlist").permitAll()
@@ -77,7 +77,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/error").permitAll() // Add this line
                         .requestMatchers("/admin/approve").hasRole("ADMIN")
                         .anyRequest().authenticated()
-                )
+                ).exceptionHandling(exception->exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .formLogin(login->login.loginProcessingUrl("/user/login")
                         .successHandler(loginSuccessHandler())
                         .failureHandler(loginFailureHandler())

@@ -18,4 +18,7 @@ public interface FavourListDao {
 
     public List<FavourListWithPet> getUserFavourPetList(Integer userId);
 
+    public void clearAllPetFromFavourList(Integer applicantId);
+
+    public Integer checkHaveFavourPet(Integer userId);
 }

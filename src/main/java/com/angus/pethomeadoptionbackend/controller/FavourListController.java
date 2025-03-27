@@ -36,7 +36,13 @@ public class FavourListController {
     {
         List<FavourListWithPet> resultList = favourListService.getUserFavourPetList(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(resultList);
+        if(resultList == null)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No favour pets for user " + userId + " found");
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(resultList);
+        }
+
     }
 
 
