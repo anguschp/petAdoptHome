@@ -24,9 +24,9 @@ public class FavourListServiceImpl implements FavourListService {
         List<FavourListWithPet> petList = favourListDao.getUserFavourPetList(userId);
 
         if(petList != null){
-            return null;
-        }else
             return petList;
+        }else
+            return null;
 
 
     }
