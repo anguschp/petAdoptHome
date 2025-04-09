@@ -18,6 +18,8 @@ public class PetDaoImpl implements PetDao {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
     public List<PetSearchResponse> getPetProfileList(PetSearchRequest petSearchRequest) {
@@ -85,7 +87,7 @@ public class PetDaoImpl implements PetDao {
 
 
     @Override
-    public PetSearchResponse getPetById(Integer id) {
+    public PetSearchResponse getAvailablePetById(Integer id) {
 
         HashMap<String, Object> params = new HashMap<>();
         String sqlStatement = "select pl.pet_id as id, pl.serial_no as serialNo,pl.pet_name as name, cat.category_name as category, b.breed_name as breed," +
@@ -100,9 +102,45 @@ public class PetDaoImpl implements PetDao {
 
         List<PetSearchResponse> result = jdbcTemplate.query(sqlStatement , params , new PetRecordRowMapper());
 
-        if(result != null)
+        if(result != null && !result.isEmpty())
         {
             return result.get(0);
         }else  return null;
     }
+
+
+    @Override
+    public PetSearchResponse getPetById(Integer id) {
+
+        HashMap<String, Object> params = new HashMap<>();
+        String sqlStatement = "select pl.pet_id as id, pl.serial_no as serialNo,pl.pet_name as name, cat.category_name as category, b.breed_name as breed," +
+                "TIMESTAMPDIFF(YEAR, birthday, CURRENT_DATE()) AS age, g.gender_name as gender, pl.pet_desc as description, pl.received_date, pl.last_modified_date, pl.isAvailable " +
+                "from petlist pl " +
+                "left join petcategory cat on pl.category = cat.id " +
+                "left join breed b on pl.breed = b.breed_id " +
+                "left join pet_gender g on pl.gender = g.gender_id where pl.pet_id = :petId";
+
+        params.put("petId", id);
+
+        List<PetSearchResponse> result = jdbcTemplate.query(sqlStatement , params , new PetRecordRowMapper());
+
+        if(result != null && !result.isEmpty())
+        {
+            return result.get(0);
+        }else  return null;
+    }
+
+
+    @Override
+    public void updatePetAvailable(Integer id, Integer available) {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("petId", id);
+        params.put("isAvailable", available);
+
+        String sql = "update petlist set isAvailable = :isAvailable where pet_id = :petId";
+
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
 }

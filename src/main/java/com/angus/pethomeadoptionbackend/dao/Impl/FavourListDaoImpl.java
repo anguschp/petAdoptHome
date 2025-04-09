@@ -45,7 +45,7 @@ public class FavourListDaoImpl implements FavourListDao {
     public List<FavourListWithPet> getUserFavourPetList(Integer userId) {
 
         Integer favourCount = checkHaveFavourPet(userId);
-        if(favourCount == 0)
+        if(favourCount == 0 || favourCount == null)
         {
             return null;
         }else {
@@ -178,11 +178,7 @@ public class FavourListDaoImpl implements FavourListDao {
 
         Integer result = namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
 
-        if(result != null){
-            return result;
-        }else{
-            return null;
-        }
+        return result;
 
     }
 

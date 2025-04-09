@@ -12,6 +12,8 @@ public interface PetService {
 
     public List<PetSearchResponse> getPetList(PetSearchRequest PetSearchRequest);
 
+    public PetSearchResponse getAvailablePetById(Integer petId);
+
     public PetSearchResponse getPetById(Integer petId);
 
 }

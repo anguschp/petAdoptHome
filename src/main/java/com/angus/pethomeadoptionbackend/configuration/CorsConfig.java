@@ -25,7 +25,7 @@ public class CorsConfig {
         var corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:3001"));
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS" , "HEAD"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setExposedHeaders(List.of(ORIGIN, ACCESS_CONTROL_ALLOW_ORIGIN , CONTENT_TYPE , ACCEPT,
                 AUTHORIZATION, X_REQUESTED_WITH, ACCESS_CONTROL_ALLOW_METHODS , ACCESS_CONTROL_ALLOW_HEADERS ,SET_COOKIE ,ACCESS_CONTROL_ALLOW_CREDENTIALS ));

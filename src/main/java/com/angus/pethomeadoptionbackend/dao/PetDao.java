@@ -10,6 +10,9 @@ public interface PetDao {
 
     public List<PetSearchResponse> getPetProfileList(PetSearchRequest PetSearchRequest);
 
+    public PetSearchResponse getAvailablePetById(Integer id);
+
     public PetSearchResponse getPetById(Integer id);
 
+    public void updatePetAvailable(Integer id, Integer available);
 }

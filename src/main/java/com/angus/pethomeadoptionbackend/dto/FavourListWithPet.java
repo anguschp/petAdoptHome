@@ -13,8 +13,17 @@ public class FavourListWithPet {
     private String gender;
     private String breed;
     private Integer petStatus;
+    private String imageSingleURL;
 
     public FavourListWithPet() {
+    }
+
+    public String getImageSingleURL() {
+        return imageSingleURL;
+    }
+
+    public void setImageSingleURL(String imageSingleURL) {
+        this.imageSingleURL = imageSingleURL;
     }
 
     public Integer getPetStatus() {

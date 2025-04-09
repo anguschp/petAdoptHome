@@ -69,6 +69,15 @@ public class PetServiceImpl implements PetService {
         return returnPet;
     }
 
+    @Override
+    public PetSearchResponse getAvailablePetById(Integer petId) {
+
+        PetSearchResponse returnPet = petDao.getAvailablePetById(petId);
+        returnPet.setImageURL(getImageListByPet(returnPet));
+
+        return returnPet;
+    }
+
 
     private List<String> getImageListByPet(PetSearchResponse pet)
     {

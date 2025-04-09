@@ -75,10 +75,11 @@ public class SecurityConfiguration {
                         .requestMatchers("/pet/petlist").permitAll()
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/error").permitAll() // Add this line
-                        .requestMatchers("/admin/approve").hasRole("ADMIN")
+                        .requestMatchers("/admin/ApplicationDetails/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 ).exceptionHandling(exception->exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .formLogin(login->login.loginProcessingUrl("/user/login")
+
                         .successHandler(loginSuccessHandler())
                         .failureHandler(loginFailureHandler())
                 ).sessionManagement(session -> session
@@ -108,7 +109,7 @@ public class SecurityConfiguration {
                             {
                                 session.invalidate();
 
-                                Cookie cookie = new Cookie("JSESSIONIDhaha", null);
+                                Cookie cookie = new Cookie("JSESSIONID", null);
                                 cookie.setPath("/");
                                 cookie.setHttpOnly(true);
                                 cookie.setSecure(true);  // If using HTTPS
