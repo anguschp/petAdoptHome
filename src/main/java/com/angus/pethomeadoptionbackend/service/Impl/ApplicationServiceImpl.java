@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class ApplicationServiceImpl implements ApplicationService {
@@ -85,7 +86,10 @@ public class ApplicationServiceImpl implements ApplicationService {
                     "Pet serial no.: " + pet.getSerial_number() ;
 
 
-            emailService.sendPlainText(null , subject , body);
+            // Async execution
+            CompletableFuture.runAsync(() -> {
+                emailService.sendPlainText(null, subject, body);
+            });
         }
         if(status == 3) {
             applicationDao.updateApplication(appId, userId, status);
