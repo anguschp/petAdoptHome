@@ -76,6 +76,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/error").permitAll() // Add this line
                         .requestMatchers("/admin/ApplicationDetails/**").hasRole("ADMIN")
+                        .requestMatchers("/pet/createNewPet").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 ).exceptionHandling(exception->exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .formLogin(login->login.loginProcessingUrl("/user/login")

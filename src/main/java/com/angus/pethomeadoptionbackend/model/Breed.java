@@ -1,12 +1,23 @@
 package com.angus.pethomeadoptionbackend.model;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.util.Date;
 
+@Entity
+@Table(name= "breed")
 public class Breed {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "breed_id")
     private Integer breedId;
+    @Column(name = "breed_name")
     private String breedName;
+    @Column(name = "created_date")
     private Date created_date;
+    @Column(name = "last_modified_date")
     private Date last_modified_date;
 
     public Breed() {

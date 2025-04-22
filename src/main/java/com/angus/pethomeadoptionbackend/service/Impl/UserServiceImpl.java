@@ -50,12 +50,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(RegisterRequest registerRequest) {
+
         User usernameInUse = userRepo.findUserByUsername(registerRequest.getUsername());
         User emailInUse = userRepo.findByEmail(registerRequest.getEmail());
+
         User newUser = new User();
-        newUser.setUsername(registerRequest.getUsername());
-        newUser.setEmail(registerRequest.getEmail());
-        newUser.setPassword(registerRequest.getPassword());
+        newUser.setUsername(registerRequest.getUsername().trim());
+        newUser.setEmail(registerRequest.getEmail().trim());
+        newUser.setPassword(registerRequest.getPassword().trim());
         newUser.setCreated_date(new Date());
         newUser.setLast_modified_date(new Date());
         newUser.setRole("ROLE_USER");

@@ -3,15 +3,24 @@ package com.angus.pethomeadoptionbackend.dao.Impl;
 import com.angus.pethomeadoptionbackend.dao.PetDao;
 import com.angus.pethomeadoptionbackend.dto.PetSearchRequest;
 import com.angus.pethomeadoptionbackend.dto.PetSearchResponse;
+import com.angus.pethomeadoptionbackend.model.NewPetDTO;
 import com.angus.pethomeadoptionbackend.model.Pet;
 import com.angus.pethomeadoptionbackend.rowMapper.PetRecordRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class PetDaoImpl implements PetDao {
@@ -20,6 +29,9 @@ public class PetDaoImpl implements PetDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private static final String ALPHANUMERIC =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     @Override
     public List<PetSearchResponse> getPetProfileList(PetSearchRequest petSearchRequest) {
@@ -142,5 +154,49 @@ public class PetDaoImpl implements PetDao {
 
         namedParameterJdbcTemplate.update(sql, params);
     }
+
+
+    @Override
+    public Integer addPet(NewPetDTO pet) {
+
+        String sql = "INSERT INTO petlist(" +
+                "serial_no, category, pet_name, breed, birthday, " +
+                "gender, received_date, last_modified_date, pet_desc, isAvailable) " +
+                "VALUES(" +
+                ":petSerial, :category, :petName, :petBreed, :petBirthday, " +
+                ":petGender, :petReceivedDate, CURRENT_TIMESTAMP, :petDesc, 1)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(7);
+        for (int i = 0; i < 7; i++) {
+            sb.append(ALPHANUMERIC.charAt(
+                    random.nextInt(ALPHANUMERIC.length())));
+        }
+        String tempUUID = sb.toString().concat(pet.getPetName().substring(0,1));
+        params.addValue("petSerial", tempUUID);
+        params.addValue("category", 1);
+        params.addValue("petName", pet.getPetName());
+        params.addValue("petBreed", pet.getPetBreed());
+
+// Handle dates properly
+        params.addValue("petBirthday", convertIsoToTimestamp(pet.getPetBirthday()));
+        params.addValue("petGender", pet.getPetGender());
+        params.addValue("petReceivedDate", convertIsoToTimestamp(pet.getPetReceivedDate()));
+        params.addValue("petDesc", pet.getPetDesc());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+
+        return keyHolder.getKey().intValue();
+
+    }
+
+
+    public static Timestamp convertIsoToTimestamp(String isoDateTime) {
+        return Timestamp.from(Instant.parse(isoDateTime));
+    }
+
 
 }

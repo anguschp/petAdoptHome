@@ -8,4 +8,5 @@ public interface GalleryImageDao {
 
     public List<GalleryImage> getImagesByPetId(Integer petId);
 
+    public void save(GalleryImage galleryImage);
 }
